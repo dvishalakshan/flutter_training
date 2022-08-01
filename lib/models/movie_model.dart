@@ -12,17 +12,17 @@ String movieModelToJson(List<MovieModel> data) =>
 
 class MovieModel {
   MovieModel({
-    this.show,
+    required this.show,
   });
 
-  Show? show;
+  Show show;
 
   factory MovieModel.fromJson(Map<String, dynamic> json) => MovieModel(
         show: Show.fromJson(json["show"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "show": show?.toJson(),
+        "show": show.toJson(),
       };
 }
 
@@ -98,7 +98,7 @@ class Rating {
   double? average;
 
   factory Rating.fromJson(Map<String, dynamic> json) => Rating(
-        average: json["average"].toDouble(),
+        average: json["average"]?.toDouble() ?? 0.0,
       );
 
   Map<String, dynamic> toJson() => {
