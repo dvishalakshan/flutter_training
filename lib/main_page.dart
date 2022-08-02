@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_trainning/models/items.dart';
+import 'package:flutter_trainning/models/movie_model.dart' as movie;
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    movie.MovieRepository().getListMovies("Life of pie");
     _listItems = Items.listModelItems();
     _gridItems = Items.gridModelItems();
     super.initState();

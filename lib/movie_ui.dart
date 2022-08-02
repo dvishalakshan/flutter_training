@@ -1,12 +1,6 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import 'models/movie_model.dart' as mm;
-
-const String movieUrl = "https://api.tvmaze.com/search/shows?q=";
 
 class MovieView extends StatefulWidget {
   const MovieView({Key? key}) : super(key: key);
@@ -38,7 +32,7 @@ class _MovieViewState extends State<MovieView> {
               decoration: const InputDecoration(hintText: "Search Movies..."),
               onChanged: (value) {
                 setState(() {
-                  _movies = getListMovies(value);
+                  // _movies = getListMovies(value);
                 });
               },
             ),
@@ -46,9 +40,9 @@ class _MovieViewState extends State<MovieView> {
               height: 8,
             ),
             FutureBuilder<List<mm.MovieModel>>(
-              future: _movies,
+              future: mm.MovieRepository().getListMovies(textController.text),
               builder: (context, snapshot) {
-                if (_movies != null && snapshot.hasData) {
+                if (snapshot.hasData) {
                   List<mm.MovieModel> data = snapshot.data ?? [];
                   return Expanded(
                     child: ListView.separated(
@@ -72,9 +66,9 @@ class _MovieViewState extends State<MovieView> {
                           );
                         }),
                   );
-                } else if (_movies != null && snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                } else if (_movies != null && !snapshot.hasData) {
+                } else if (snapshot.hasError) {
+                  return Text("Some error pop up :: ${snapshot.error}");
+                } else if (!snapshot.hasData) {
                   return const SizedBox(
                       height: 50,
                       width: 50,
@@ -88,15 +82,5 @@ class _MovieViewState extends State<MovieView> {
         ),
       ),
     );
-  }
-
-  Future<List<mm.MovieModel>> getListMovies(String movieName) async {
-    http.Response response = await http.get(Uri.parse("$movieUrl$movieName"));
-    log("RESPONSE  :: ${json.decode(response.body)}");
-    if (response.body.isNotEmpty) {
-      return mm.movieModelFromJson(response.body);
-    } else {
-      return Future.error("No Movies Found");
-    }
   }
 }

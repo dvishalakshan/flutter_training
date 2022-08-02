@@ -2,7 +2,24 @@
 //
 //     final movieModel = movieModelFromJson(jsonString);
 
+import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
+
+class MovieRepository {
+  final String movieUrl = "https://api.tvmaze.com/search/shows?q=";
+
+  Future<List<MovieModel>> getListMovies(String movieName) async {
+    http.Response response = await http.get(Uri.parse("$movieUrl$movieName"));
+    log("RESPONSE  :: ${json.decode(response.body)}");
+    if (response.body.isNotEmpty) {
+      return movieModelFromJson(response.body);
+    } else {
+      return Future.error("No Movies Found");
+    }
+  }
+}
 
 List<MovieModel> movieModelFromJson(String str) =>
     List<MovieModel>.from(json.decode(str).map((x) => MovieModel.fromJson(x)));
