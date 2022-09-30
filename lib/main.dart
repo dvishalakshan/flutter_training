@@ -28,6 +28,7 @@ Stream<int> streamExample() async* {
   log("future delayed elapsed");
   yield math.Random().nextInt(100);
   log("passed the data");
+  log("passed the data");
   streamExample();
 }
 
